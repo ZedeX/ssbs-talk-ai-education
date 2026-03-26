@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI时代，做会借力的家长</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="favicon.svg">
+  <link rel="apple-touch-icon"
+    href="favicon.svg">
+
+  <!-- Open Graph / WeChat sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI时代，做会借力的家长">
+  <meta property="og:description" content="陪孩子用AI成长的三个真实故事——时间小火车、AI错题集、外国山海经。一位互联网产品人家长的实践分享。">
+  <meta property="og:image"
+    content="favicon.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="zh_CN">
+
+  <!-- Twitter Card (fallback) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI时代，做会借力的家长">
+  <meta name="twitter:description" content="陪孩子用AI成长的三个真实故事——一位互联网产品人家长的实践分享">
+
+  <!-- WeChat specific -->
+  <meta name="format-detection" content="telephone=no">
+  <meta name="applicable-device" content="pc,mobile">
+
+  <link rel="preconnect" href="https://fonts.loli.net">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style"
+    href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Serif+Display&display=swap">
+  <link
+    href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Serif+Display&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #FAF6EF;
+      --navy: #1A2340;
+      --navy-light: #2C3A5C;
+      --amber: #E8933A;
+      --amber-light: #F5B86A;
+      --amber-pale: #FDF0DC;
+      --sage: #5C7A6A;
+      --red-accent: #C94F3B;
+      --text-body: #2E3A52;
+      --text-muted: #7A8BA0;
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--navy);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      mix-blend-mode: screen;
+    }
+
+    .bg-orb-1 {
+      width: 40vw;
+      height: 40vw;
+      background: var(--amber);
+      animation: orb1 25s ease-in-out infinite alternate;
+    }
+
+    .bg-orb-2 {
+      width: 35vw;
+      height: 35vw;
+      background: var(--sage);
+      animation: orb2 30s ease-in-out infinite alternate;
+    }
+
+    .bg-orb-3 {
+      width: 30vw;
+      height: 30vw;
+      background: #7B9CC8;
+      animation: orb3 35s ease-in-out infinite alternate;
+    }
+
+    @keyframes orb1 {
+      0% {
+        transform: translate(-10%, -10%);
+      }
+
+      100% {
+        transform: translate(60%, 40%);
+      }
+    }
+
+    @keyframes orb2 {
+      0% {
+        transform: translate(80%, 10%);
+      }
+
+      100% {
+        transform: translate(20%, 70%);
+      }
+    }
+
+    @keyframes orb3 {
+      0% {
+        transform: translate(30%, 80%);
+      }
+
+      100% {
+        transform: translate(70%, 20%);
+      }
+    }
+
+    .slide {
+      z-index: 1;
+    }
+
+    /* ─── DECK WRAPPER ─── */
+    #deck {
+      width: var(--slide-w);
+      height: var(--slide-h);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 5vw 7vw;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.55s cubic-bezier(.4, 0, .2, 1),
+        transform 0.55s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.4s ease, transform 0.2s ease;
+    }
+
+    /* ─── NAV ─── */
+    #nav {
+      position: fixed;
+      bottom: 3.2vh;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.2vw;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    #nav.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+      font-size: 2rem;
+      width: 5.2vh;
+      height: 5.2vh;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      line-height: 1;
+      font-family: inherit;
+    }
+
+    .nav-btn:hover {
+      background: rgba(232, 147, 58, 0.5);
+      transform: scale(1.08);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.2;
+      cursor: default;
+      transform: none;
+    }
+
+    #slide-counter {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 1.65vh;
+      letter-spacing: 0.12em;
+      font-weight: 300;
+      min-width: 6em;
+      text-align: center;
+      font-family: 'DM Serif Display', serif;
+    }
+
+    /* ─── PROGRESS DOTS ─── */
+    #dots {
+      position: fixed;
+      right: 2.8vw;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1vh;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .dot {
+      width: 0.8vh;
+      height: 0.8vh;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .dot.active {
+      background: var(--amber);
+      transform: scale(1.6);
+    }
+
+    /* ─── SLIDE 1: COVER ─── */
+    .slide-cover {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 80% 60%, rgba(232, 147, 58, 0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 10% 20%, rgba(92, 122, 106, 0.1) 0%, transparent 60%);
+    }
+
+    .cover-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0.6vh;
+      background: linear-gradient(90deg, var(--amber) 0%, var(--amber-light) 60%, transparent 100%);
+    }
+
+    .cover-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .cover-eyebrow {
+      font-size: clamp(1.5rem, 2.2vh, 2.4vh);
+      color: var(--amber);
+      letter-spacing: 0.25em;
+      font-weight: 300;
+      margin-bottom: 3.5vh;
+      font-family: 'Noto Sans SC', sans-serif;
+      text-transform: uppercase;
+    }
+
+    .cover-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(3rem, 8.5vh, 10vh);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.12;
+      margin-bottom: 2.5vh;
+      letter-spacing: -0.01em;
+    }
+
+    .cover-title span {
+      color: var(--amber);
+    }
+
+    .cover-subtitle {
+      font-size: clamp(1.5rem, 2.6vh, 3.2vh);
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+      margin-bottom: 5vh;
+      line-height: 1.6;
+    }
+
+    .cover-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.2vw;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 100px;
+      padding: 1.2vh 2.4vw;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: clamp(1.1rem, 2vh, 2.2vh);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+    }
+
+    .cover-tag-dot {
+      width: 0.9vh;
+      height: 0.9vh;
+      border-radius: 50%;
+      background: var(--amber);
+      flex-shrink: 0;
+    }
+
+    .cover-deco {
+      position: absolute;
+      right: 5vw;
+      bottom: 12vh;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(10rem, 26vh, 32vh);
+      color: rgba(232, 147, 58, 0.055);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ─── COMMON SLIDE BASE ─── */
+    .slide-light {
+      background: var(--cream);
+    }
+
+    .slide-dark {
+      background: var(--navy);
+    }
+
+    .slide-warm {
+      background: var(--amber-pale);
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ─── SLIDE HEADERS ─── */
+    .slide-label {
+      font-size: clamp(1.1rem, 1.9vh, 2.2vh);
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 2.2vh;
+    }
+
+    .label-amber {
+      color: var(--amber);
+    }
+
+    .label-sage {
+      color: var(--sage);
+    }
+
+    .label-navy {
+      color: var(--navy-light);
+      opacity: 0.6;
+    }
+
+    .slide-h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(2.4rem, 5.8vh, 7vh);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--navy);
+      margin-bottom: 3.5vh;
+    }
+
+    .slide-h1.light {
+      color: #fff;
+    }
+
+    .slide-h1 em {
+      font-style: normal;
+      color: var(--amber);
+      font-weight: 900;
+    }
+
+    .slide-lead {
+      font-size: clamp(1.6rem, 2.8vh, 3.4vh);
+      line-height: 1.75;
+      font-weight: 300;
+      color: var(--text-body);
+      margin-bottom: 3vh;
+    }
+
+    .slide-lead.light {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ─── CONSENSUS CARDS ─── */
+    .consensus-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2vh;
+      width: 100%;
+    }
+
+    .consensus-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 2.4vw;
+      background: #fff;
+      border-radius: 1.6vh;
+      padding: 2.4vh 2.8vw;
+      box-shadow: 0 2px 24px rgba(26, 35, 64, 0.07);
+      border-left: 0.6vh solid var(--amber);
+    }
+
+    .consensus-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4.5vh, 5.5vh);
+      color: var(--amber-light);
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: -0.3vh;
+    }
+
+    .consensus-text {
+      font-size: clamp(1.4rem, 2.4vh, 2.9vh);
+      color: var(--text-body);
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    .consensus-text strong {
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* ─── MODE CARDS ─── */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.4vw;
+      width: 100%;
+      margin-top: 1vh;
+    }
+
+    .mode-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 2vh;
+      padding: 3vh 2.4vw;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8vh;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .mode-card:hover {
+      border-color: rgba(232, 147, 58, 0.5);
+      background: rgba(232, 147, 58, 0.06);
+    }
+
+    .mode-icon {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.8rem, 3.8vh, 4.5vh);
+      line-height: 1;
+      color: #FFFFFF;
+    }
+
+    .mode-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.4rem, 2.4vh, 3.0vh);
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1.3;
+    }
+
+    .mode-tag {
+      display: inline-block;
+      font-size: clamp(1rem, 1.6vh, 1.9vh);
+      color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 100px;
+      padding: 0.5vh 1.2vw;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5vh;
+    }
+
+    .mode-desc {
+      font-size: clamp(1.2rem, 2vh, 2.4vh);
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    .mode-case {
+      font-size: clamp(1rem, 1.75vh, 2.1vh);
+      color: var(--amber-light);
+      font-weight: 500;
+      margin-top: auto;
+      padding-top: 1.5vh;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* ─── CASE SLIDES ─── */
+    .case-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5vw;
+      width: 100%;
+      align-items: center;
+    }
+
+    .case-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(6rem, 16vh, 20vh);
+      color: rgba(232, 147, 58, 0.12);
+      line-height: 0.9;
+      margin-bottom: 1vh;
+    }
+
+    .case-number.dark-num {
+      color: rgba(26, 35, 64, 0.1);
+    }
+
+    .case-right {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2vh;
+    }
+
+    .case-tag-row {
+      display: flex;
+      gap: 1.2vw;
+      flex-wrap: wrap;
+      margin-bottom: 0.5vh;
+    }
+
+    .case-tag {
+      font-size: clamp(1rem, 1.7vh, 2vh);
+      padding: 0.6vh 1.4vw;
+      border-radius: 100px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-problem {
+      background: rgba(201, 79, 59, 0.12);
+      color: #c94f3b;
+      border: 1px solid rgba(201, 79, 59, 0.2);
+    }
+
+    .tag-tool {
+      background: rgba(92, 122, 106, 0.12);
+      color: var(--sage);
+      border: 1px solid rgba(92, 122, 106, 0.2);
+    }
+
+    .tag-insight {
+      background: rgba(232, 147, 58, 0.12);
+      color: var(--amber);
+      border: 1px solid rgba(232, 147, 58, 0.25);
+    }
+
+    .case-points {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8vh;
+    }
+
+    .case-point {
+      display: flex;
+      gap: 1.6vw;
+      align-items: flex-start;
+    }
+
+    .point-icon {
+      font-size: clamp(1.4rem, 2.4vh, 2.8vh);
+      flex-shrink: 0;
+      margin-top: 0.2vh;
+    }
+
+    .point-text {
+      font-size: clamp(1.3rem, 2.3vh, 2.8vh);
+      line-height: 1.65;
+      color: var(--text-body);
+      font-weight: 400;
+    }
+
+    .point-text.light {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .point-text strong {
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .point-text.light strong {
+      color: #fff;
+    }
+
+    .insight-box {
+      background: linear-gradient(135deg, rgba(232, 147, 58, 0.12), rgba(245, 184, 106, 0.08));
+      border: 1.5px solid rgba(232, 147, 58, 0.3);
+      border-radius: 1.4vh;
+      padding: 2.2vh 2.4vw;
+      font-size: clamp(1.3rem, 2.2vh, 2.6vh);
+      color: var(--navy);
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    .insight-box.dark {
+      color: rgba(255, 255, 255, 0.82);
+      background: linear-gradient(135deg, rgba(232, 147, 58, 0.1), rgba(245, 184, 106, 0.05));
+    }
+
+    .insight-box strong {
+      color: var(--amber);
+      font-weight: 700;
+    }
+
+    /* ─── PRINCIPLE CARDS ─── */
+    .principle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.2vw 2.8vw;
+      width: 100%;
+    }
+
+    .principle-card {
+      background: #fff;
+      border-radius: 1.8vh;
+      padding: 2.8vh 2.8vw;
+      box-shadow: 0 2px 28px rgba(26, 35, 64, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1.4vh;
+      border-top: 0.55vh solid transparent;
+      transition: transform 0.2s;
+    }
+
+    .principle-card:hover {
+      transform: translateY(-0.4vh);
+    }
+
+    .principle-card:nth-child(1) {
+      border-color: var(--amber);
+    }
+
+    .principle-card:nth-child(2) {
+      border-color: var(--sage);
+    }
+
+    .principle-card:nth-child(3) {
+      border-color: #7B9CC8;
+    }
+
+    .principle-card:nth-child(4) {
+      border-color: var(--red-accent);
+    }
+
+    .p-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.4rem, 2.8vh, 3.4vh);
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .p-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.5rem, 2.8vh, 3.4vh);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .p-desc {
+      font-size: clamp(1.2rem, 2vh, 2.4vh);
+      color: var(--text-muted);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* ─── FINAL SLIDE ─── */
+    .final-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4vw;
+      width: 100%;
+    }
+
+    .final-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2vh;
+    }
+
+    .final-col-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.5rem, 2.8vh, 3.4vh);
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: 0.5vh;
+      padding-bottom: 1.5vh;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .final-item {
+      display: flex;
+      gap: 1.4vw;
+      align-items: flex-start;
+    }
+
+    .final-item-icon {
+      font-size: clamp(1.3rem, 2.2vh, 2.6vh);
+      flex-shrink: 0;
+    }
+
+    .final-item-text {
+      font-size: clamp(1.2rem, 2.1vh, 2.5vh);
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    .final-item-text strong {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .final-item-text a {
+      color: var(--amber);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-bottom-color 0.2s ease;
+    }
+
+    .final-item-text a:hover {
+      border-bottom-color: var(--amber);
+    }
+
+    .qr-placeholder {
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 1.6vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5vh;
+      padding: 3vh 2vw;
+      min-height: 20vh;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: clamp(1.1rem, 2vh, 2.3vh);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .qr-icon {
+      font-size: clamp(2.5rem, 5vh, 6vh);
+    }
+
+    .closing-quote {
+      background: linear-gradient(135deg, rgba(232, 147, 58, 0.1), rgba(245, 184, 106, 0.06));
+      border-left: 0.6vh solid var(--amber);
+      border-radius: 0 1.4vh 1.4vh 0;
+      padding: 2.4vh 2.8vw;
+      width: 100%;
+      margin-top: 1vh;
+    }
+
+    .closing-quote-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.5rem, 2.6vh, 3.2vh);
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.75;
+      font-weight: 400;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      width: 5vw;
+      height: 0.4vh;
+      background: var(--amber);
+      border-radius: 4px;
+      margin-bottom: 2.8vh;
+    }
+
+    .divider.light {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ─── SECTION BADGE ─── */
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8vw;
+      background: var(--amber);
+      color: var(--navy);
+      font-size: clamp(1.2rem, 1.9vh, 2.3vh);
+      font-weight: 700;
+      padding: 0.8vh 1.8vw;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+      margin-bottom: 2.2vh;
+      align-self: flex-start;
+    }
+
+    /* ─── KEY NUMBER ─── */
+    .key-stat {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(4rem, 10vh, 13vh);
+      color: var(--amber);
+      line-height: 0.9;
+      margin-bottom: 1vh;
+    }
+
+    /* ─── SLIDE TITLE BAR ─── */
+    .title-bar {
+      display: flex;
+      align-items: center;
+      gap: 2vw;
+      margin-bottom: 3.5vh;
+      width: 100%;
+    }
+
+    .title-bar-line {
+      flex: 1;
+      height: 1.5px;
+      background: linear-gradient(90deg, rgba(232, 147, 58, 0.4), transparent);
+    }
+
+    .title-bar-line.light {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), transparent);
+    }
+
+    /* ─── KEYBOARD HINT ─── */
+    #keyboard-hint {
+      position: fixed;
+      top: 3vh;
+      right: 3vw;
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 1.5vh;
+      letter-spacing: 0.08em;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.8vw;
+      font-weight: 300;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .key-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      width: 3.2vh;
+      height: 3.2vh;
+      font-size: 1.4vh;
+    }
+
+    /* Fade in animation for slide content */
+    .slide.active .slide-inner>*,
+    .slide.active .cover-content>*,
+    .slide.active .case-layout>*,
+    .slide.active .mode-grid>*,
+    .slide.active .principle-grid>*,
+    .slide.active .final-cols>* {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .slide.active .slide-inner>*:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+
+    .slide.active .slide-inner>*:nth-child(2) {
+      animation-delay: 0.12s;
+    }
+
+    .slide.active .slide-inner>*:nth-child(3) {
+      animation-delay: 0.19s;
+    }
+
+    .slide.active .slide-inner>*:nth-child(4) {
+      animation-delay: 0.26s;
+    }
+
+    .slide.active .mode-grid>*:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .slide.active .mode-grid>*:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .slide.active .mode-grid>*:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .slide.active .principle-grid>*:nth-child(1) {
+      animation-delay: 0.08s;
+    }
+
+    .slide.active .principle-grid>*:nth-child(2) {
+      animation-delay: 0.16s;
+    }
+
+    .slide.active .principle-grid>*:nth-child(3) {
+      animation-delay: 0.24s;
+    }
+
+    .slide.active .principle-grid>*:nth-child(4) {
+      animation-delay: 0.32s;
+    }
+
+    .slide.active .final-cols>*:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .slide.active .final-cols>*:nth-child(2) {
+      animation-delay: 0.22s;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── MOBILE: slightly-larger-than-normal-web, scrollable ─── */
+    @media (max-width: 768px) {
+      body {
+        overflow: auto;
+      }
+
+      #deck {
+        height: auto;
+        overflow: visible;
+      }
+
+      .slide {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: all;
+        display: none;
+        padding: 24px 20px 80px;
+        transition: none;
+      }
+
+      .slide.active {
+        display: flex;
+      }
+
+      .slide.exit {
+        display: none;
+      }
+
+      /* Mobile font scale — ~1–2px larger than normal web defaults */
+      .cover-eyebrow {
+        font-size: 13px;
+        letter-spacing: 0.18em;
+      }
+
+      .cover-title {
+        font-size: 42px;
+        line-height: 1.15;
+      }
+
+      .cover-subtitle {
+        font-size: 17px;
+      }
+
+      .cover-tag {
+        font-size: 13px;
+      }
+
+      .cover-deco {
+        font-size: 120px;
+        right: -10px;
+        bottom: 20px;
+      }
+
+      .slide-label {
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+
+      .slide-h1 {
+        font-size: 26px;
+        margin-bottom: 16px;
+      }
+
+      .slide-lead {
+        font-size: 16px;
+      }
+
+      .divider {
+        margin-bottom: 14px;
+      }
+
+      .consensus-list {
+        gap: 12px;
+      }
+
+      .consensus-card {
+        padding: 14px 16px;
+        gap: 14px;
+        border-radius: 12px;
+      }
+
+      .consensus-num {
+        font-size: 28px;
+      }
+
+      .consensus-text {
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .slide2-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .right-section {
+        padding: 18px 16px;
+      }
+
+      .mode-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .mode-card {
+        padding: 16px 18px;
+        border-radius: 14px;
+        gap: 10px;
+      }
+
+      .mode-icon {
+        font-size: 24px;
+        color: #FFFFFF;
+      }
+
+      .mode-title {
+        font-size: 17px;
+      }
+
+      .mode-tag {
+        font-size: 12px;
+      }
+
+      .mode-desc {
+        font-size: 14px;
+      }
+
+      .mode-case {
+        font-size: 13px;
+      }
+
+      .case-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .case-number {
+        font-size: 72px;
+        margin-bottom: 4px;
+      }
+
+      .case-left .slide-h1 {
+        font-size: 24px !important;
+      }
+
+      .case-tag {
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+
+      .case-points {
+        gap: 12px;
+      }
+
+      .case-point {
+        gap: 10px;
+      }
+
+      .point-icon {
+        font-size: 18px;
+      }
+
+      .point-text {
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .insight-box {
+        font-size: 14px;
+        padding: 14px 16px;
+        border-radius: 10px;
+      }
+
+      .section-badge {
+        font-size: 13px;
+        padding: 6px 14px;
+        margin-bottom: 14px;
+      }
+
+      .principle-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .principle-card {
+        padding: 16px 18px;
+        border-radius: 12px;
+        gap: 8px;
+      }
+
+      .p-num {
+        font-size: 18px;
+      }
+
+      .p-title {
+        font-size: 17px;
+      }
+
+      .p-desc {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .final-cols {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .final-col-title {
+        font-size: 17px;
+      }
+
+      .final-item-icon {
+        font-size: 18px;
+      }
+
+      .final-item-text {
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .qr-placeholder {
+        min-height: 140px;
+        font-size: 14px;
+      }
+
+      .qr-icon {
+        font-size: 36px;
+      }
+
+      .closing-quote {
+        padding: 16px 18px;
+        margin-bottom: 18px;
+      }
+
+      .closing-quote-text {
+        font-size: 17px;
+        line-height: 1.75;
+      }
+
+      /* Nav */
+      #nav {
+        bottom: 16px;
+        gap: 16px;
+      }
+
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      #slide-counter {
+        font-size: 13px;
+      }
+
+      #dots {
+        right: 12px;
+        gap: 7px;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      #keyboard-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-orbs">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+  <div id="deck">
+
+    <!-- ═══ SLIDE 1: COVER ═══ -->
+    <div class="slide slide-dark slide-cover active" data-index="0">
+      <div class="cover-bg"></div>
+      <div class="cover-line"></div>
+      <div class="cover-deco">AI</div>
+      <div class="cover-content">
+        <div class="cover-eyebrow">家长分享 · 面向小学教师</div>
+        <div class="cover-title">AI时代<br><span>做会借力</span><br>的家长</div>
+        <div class="cover-subtitle">陪孩子用AI成长的三个真实故事</div>
+        <div class="cover-tag">
+          <div class="cover-tag-dot"></div>
+          3年2班 Zahra 爸爸
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 2: WHO AM I ═══ -->
+    <div class="slide slide-light" data-index="1">
+      <div class="slide-inner">
+        <div class="left-section">
+          <div class="slide-label label-amber">开场白</div>
+          <div class="slide-h1">今天，我们只聊<em>真实的故事</em></div>
+          <div class="divider"></div>
+          <div class="slide2-grid"
+            style="display: grid; grid-template-columns: 3fr 1fr; gap: 3vw; align-items: stretch;">
+            <div class="consensus-list" style="display: flex; flex-direction: column; gap: 2.2vh; height: 100%;">
+              <div class="consensus-card" style="border-color:#7B9CC8; flex: 1; display: flex; align-items: center;">
+                <div class="consensus-num" style="color:#7B9CC8;">&nbsp;I </div>
+                <div class="consensus-text"><strong>3年2班 Zahra 爸爸</strong><br>每天用 AI 工作，同时是一个小学生的家长</div>
+              </div>
+              <div class="consensus-card" style="border-color:#c94f3b; flex: 1; display: flex; align-items: center;">
+                <div class="consensus-num" style="color:#e8b4b0;">✕</div>
+                <div class="consensus-text">今天<strong>不讲</strong>：AI 技术原理 / 万能公式 / 工具推荐清单</div>
+              </div>
+              <div class="consensus-card"
+                style="border-color:var(--sage); flex: 1; display: flex; align-items: center;">
+                <div class="consensus-num" style="color:var(--sage);">✓
+                </div>
+                <div class="consensus-text">今天<strong>只讲</strong>：3个陪娃探索的真实故事 ＋ 1套可带走的原则<br>以及一点关于家校同频的浅薄思考</div>
+              </div>
+            </div>
+
+            <!-- 右侧新增"家校联合·共促发展"区块 -->
+            <div class="right-section"
+              style="background: linear-gradient(135deg, var(--amber-pale), rgba(245,184,106,0.2)); border-radius: 1.8vh; padding: 3vh 2vw; border: 1.5px solid var(--amber-light); display: flex; flex-direction: column; justify-content: center;">
+              <div
+                style="font-family: 'Noto Serif SC', serif; font-size: clamp(1.8rem, 3vh, 3.5vh); font-weight: 900; color: var(--navy); margin-bottom: 2vh; line-height: 1.3;">
+                家校联合<br><span style="color: var(--amber);">共促发展</span>
+              </div>
+              <div
+                style="font-size: clamp(1.1rem, 1.8vh, 2.2vh); color: var(--text-body); line-height: 1.6; font-weight: 400;">
+                以AI为桥梁，连接家校共育，让技术成为家校协作的助力。
+              </div>
+              <div style="width: 4vw; height: 0.4vh; background: var(--amber); border-radius: 4px; margin-top: 2vh;">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 3: THREE CONSENSUS ═══ -->
+    <div class="slide slide-light" data-index="2">
+      <div class="slide-inner">
+        <div class="slide-label label-amber">前提共识</div>
+        <div class="slide-h1">先说三句话，<em>再讲故事</em></div>
+        <div class="divider"></div>
+        <div class="consensus-list">
+          <div class="consensus-card">
+            <div class="consensus-num" style="height:80px;display:grid;place-items:center;">一</div>
+            <div class="consensus-text"><strong>AI永远替代不了老师的教导，也替代不了家长的陪伴</strong><br>教育的核心是人与人之间的连接，这是技术给不了的</div>
+          </div>
+          <div class="consensus-card">
+            <div class="consensus-num" style="height:80px;display:grid;place-items:center;">二</div>
+            <div class="consensus-text"><strong>AI是脚手架，孩子的成长才是那栋建筑</strong><br>脚手架再好，最终要拆掉，留下来的是孩子自己建起来的能力</div>
+          </div>
+          <div class="consensus-card">
+            <div class="consensus-num" style="height:80px;display:grid;place-items:center;">三</div>
+            <div class="consensus-text"><strong>面对AI，堵不如疏，家校同频才能真正帮到孩子</strong><br>孩子是AI时代的原住民，我们的任务是教孩子怎么正确用，而不是禁止
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 4: THREE MODES ═══ -->
+    <div class="slide slide-dark" data-index="3">
+      <div class="slide-inner">
+        <div class="slide-label label-amber">理解框架</div>
+        <div class="slide-h1 light">AI与孩子的<em>三种相处方式</em></div>
+        <div class="divider light"></div>
+        <div class="mode-grid">
+          <div class="mode-card">
+            <div class="mode-icon">🔧 自动化模式</div>
+            <div class="mode-title">工具模式<br>AI 帮我做</div>
+            <div class="mode-desc">AI 完成机械重复工作，家长来判断和审核结果<br>孩子把精力放在理解和思考上</div>
+            <div class="mode-case">→ 案例①：AI 错题讲解</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-icon">🚂 代理自主模式</div>
+            <div class="mode-title">陪伴模式<br>孩子主导</div>
+            <div class="mode-desc">孩子自己与AI工具互动，家长退至引导位置<br>需要提前把规则和边界设计好</div>
+            <div class="mode-case">→ 案例②：时间小火车</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-icon">🤝 增强协作模式</div>
+            <div class="mode-title">协作模式<br>我们一起探索</div>
+            <div class="mode-desc">家长＋孩子＋AI 作为搭档共同探索一件事<br>方向由我们定，结论由我们得出</div>
+            <div class="mode-case">→ 案例③：意大利语启蒙</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 5: CASE 1 错题集 ═══ -->
+    <div class="slide slide-light" data-index="4">
+      <div class="slide-inner">
+        <div class="section-badge">📚 案例 01</div>
+        <div class="case-layout">
+          <div class="case-left">
+            <div class="case-number dark-num">01</div>
+            <div class="slide-h1" style="font-size: clamp(2rem,4.8vh,5.8vh);">AI 错题集<br><em>比我讲得清楚</em></div>
+            <div class="case-tag-row" style="margin-top:1.5vh">
+              <span class="case-tag tag-problem">错了又错</span>
+              <span class="case-tag tag-tool">豆包爱学</span>
+              <span class="case-tag tag-insight">亲子关系</span>
+            </div>
+          </div>
+          <div class="case-right">
+            <div class="case-points">
+              <div class="case-point">
+                <span class="point-icon">😤</span>
+                <div class="point-text"><strong>痛点：</strong>改了又错，亲自讲题变亲子大战；家长早忘了小学知识点体系</div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">📸</span>
+                <div class="point-text"><strong>做法：</strong>孩子先自行订正→拍照上传→AI给出<strong>知识点定位＋步骤拆解＋错因分析＋同类练习</strong>
+                </div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🔊</span>
+                <div class="point-text"><strong>惊喜：</strong>语音讲解亲切自然，孩子<strong>愿意反复听</strong>，像老师上课的语气，没有机械感</div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🌱</span>
+                <div class="point-text"><strong>变化：</strong>不再怕错题，养成自主订正习惯，慢慢有了“自己解决问题”的意识</div>
+              </div>
+            </div>
+            <div class="insight-box">
+              💡 <strong>启发：</strong>AI可成为课堂外的<strong>「个性化助教」</strong>，与课堂教学形成<strong>互补</strong> ，帮每个孩子做差异化巩固
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 6: CASE 2 时间小火车 ═══ -->
+    <div class="slide slide-warm" data-index="5">
+      <div class="slide-inner">
+        <div class="section-badge" style="background:var(--sage);color:#fff">🚂 案例 02</div>
+        <div class="case-layout">
+          <div class="case-left">
+            <div class="case-number dark-num">02</div>
+            <div class="slide-h1" style="font-size: clamp(2rem,4.8vh,5.8vh);">时间小火车<br>孩子<em>自己当列车长</em></div>
+            <div class="case-tag-row" style="margin-top:1.5vh">
+              <span class="case-tag tag-problem">拖延症</span>
+              <span class="case-tag tag-tool">AI生成网页</span>
+              <span class="case-tag tag-insight">主权感</span>
+            </div>
+          </div>
+          <div class="case-right">
+            <div class="case-points">
+              <div class="case-point">
+                <span class="point-icon">😩</span>
+                <div class="point-text"><strong>痛点：</strong>半小时作业拖两小时；所有时间管理工具都无效——因为是「大人的任务」</div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🧠</span>
+                <div class="point-text"><strong>思路转变：</strong>把「家长的任务」变成「孩子的游戏」——让孩子感受到对自己时间的<strong>主权</strong>
+                </div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🛠️</span>
+                <div class="point-text"><strong>做法：</strong>把想法告诉AI，AI帮我生成可拖拽的时间管理网页；全程只引导，不替孩子做决定</div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">✨</span>
+                <div class="point-text"><strong>变化：</strong>「<strong>我是列车长，行程是我安排的</strong>」——孩子开始为自己的时间负责，而不是为爸妈
+                </div>
+              </div>
+            </div>
+            <div class="insight-box">
+              💡 <strong>启发：</strong>AI让家长有能力把教育想法<strong>「产品化」</strong>，把枯燥规则变成孩子愿意主动<strong>参与</strong>的形式
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 7: CASE 3 外国山海经 ═══ -->
+    <div class="slide slide-light" data-index="6">
+      <div class="slide-inner">
+        <div class="section-badge" style="background:#7B9CC8">🌍 案例 03</div>
+        <div class="case-layout">
+          <div class="case-left">
+            <div class="case-number dark-num">03</div>
+            <div class="slide-h1" style="font-size: clamp(2rem,4.8vh,5.8vh);">外国山海经<br>从谐音梗到<em>语言启蒙</em></div>
+            <div class="case-tag-row" style="margin-top:1.5vh">
+              <span class="case-tag tag-problem">兴趣窗口</span>
+              <span class="case-tag"
+                style="background:rgba(123,156,200,0.12);color:#5A7FA8;border:1px solid rgba(123,156,200,0.25)">意大利语</span>
+              <span class="case-tag tag-insight">寓乐于教</span>
+            </div>
+          </div>
+          <div class="case-right">
+            <div class="case-points">
+              <div class="case-point">
+                <span class="point-icon">🤔</span>
+                <div class="point-text"><strong>起点：</strong>孩子们疯传「外国山海经」谐音词→AI查证：全是<strong>意大利语单词</strong></div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🔍</span>
+                <div class="point-text"><strong>做法：</strong>AI归纳发音规律→制作谐音对照表→配合《教父》片段感受意式英语腔调</div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🎬</span>
+                <div class="point-text"><strong>延伸：</strong>孩子拿着对照表「破解」神兽名字，获得成就感；主动去教同学，热情高涨</div>
+              </div>
+              <div class="case-point">
+                <span class="point-icon">🔥</span>
+                <div class="point-text"><strong>变化：</strong>语言学习内驱力被激活；开始<strong>主动查词根、比较不同语言</strong>，带动英语学习
+                </div>
+              </div>
+            </div>
+            <div class="insight-box">
+              💡 <strong>启示：</strong>好奇心的窗口期很短。AI让家长有能力<strong>「接住」</strong>孩子的好奇心——<strong>二十分钟，完成一堂有质量的语言启蒙</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 8: FOUR PRINCIPLES ═══ -->
+    <div class="slide slide-light" data-index="7">
+      <div class="slide-inner">
+        <div class="slide-label label-amber">可带走的方法</div>
+        <div class="slide-h1">陪娃用AI，<em>四个核心原则</em></div>
+        <div class="divider"></div>
+        <div class="principle-grid">
+          <div class="principle-card">
+            <div class="p-num">01</div>
+            <div class="p-title">先定目标，再划边界</div>
+            <div class="p-desc">先想清楚要培养孩子什么能力，再分清孩子必须亲自做什么，AI可以辅助什么。绝不让AI替代孩子的思考</div>
+          </div>
+          <div class="principle-card">
+            <div class="p-num">02</div>
+            <div class="p-title">说清需求，精准借力</div>
+            <div class="p-desc">不用背万能公式——像教一个助手一样，说清孩子的年龄、特点和想要的效果，AI就能放大你的教育能力</div>
+          </div>
+          <div class="principle-card">
+            <div class="p-num">03</div>
+            <div class="p-title">筛选优化，持续迭代</div>
+            <div class="p-desc">AI给的从来不是标准答案。结合孩子的情况不断调整，告诉AI什么好、什么不好，让它越来越懂你的孩子</div>
+          </div>
+          <div class="principle-card">
+            <div class="p-num">04</div>
+            <div class="p-title">守住底线，全程负责</div>
+            <div class="p-desc">选合规安全的工具，全程陪伴引导，教孩子正确的AI使用观。不管用什么技术，我们永远是第一责任人</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 9: SCHOOL-HOME SYNC ═══ -->
+    <div class="slide slide-dark" data-index="8">
+      <div class="slide-inner">
+        <div class="slide-label label-amber">给老师的思考</div>
+        <div class="slide-h1 light">AI时代，<em>家校同频</em>的三个层次</div>
+        <div class="divider light"></div>
+        <div class="consensus-list">
+          <div class="consensus-card"
+            style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);border-left-color:var(--amber)">
+            <div class="consensus-num">🙅</div>
+            <div class="consensus-text" style="color:rgba(255,255,255,0.78)"><strong
+                style="color:#fff">不焦虑，不禁止</strong><br>堵不如疏——家校一起教孩子正确用AI，把它变成学习工具，而非抄作业的捷径</div>
+          </div>
+          <div class="consensus-card"
+            style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);border-left-color:var(--sage)">
+            <div class="consensus-num">📐</div>
+            <div class="consensus-text" style="color:rgba(255,255,255,0.78)"><strong
+                style="color:#fff">同方向，同底线</strong><br>学校与家庭统一AI使用规则，孩子才不会混乱，才能真正养成正确习惯</div>
+          </div>
+          <div class="consensus-card"
+            style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);border-left-color:#7B9CC8">
+            <div class="consensus-num">🔄</div>
+            <div class="consensus-text" style="color:rgba(255,255,255,0.78)"><strong
+                style="color:#fff">互配合，互补充</strong><br>老师抓课堂基础，家长用AI做个性化巩固拓展 · 小提议：<strong
+                style="color:var(--amber-light)">探究型作业</strong>是AI与孩子最自然的搭档</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 10: CLOSING ═══ -->
+    <div class="slide slide-dark" data-index="9">
+      <div class="slide-inner">
+        <div class="slide-label label-amber">感谢聆听</div>
+        <div class="closing-quote" style="margin-bottom:3vh;">
+          <div class="closing-quote-text">
+            AI时代最重要的教育，不是教孩子<em style="color:var(--amber);font-style:normal;">怎么用AI</em>，<br>
+            而是教孩子怎么<em style="color:var(--amber);font-style:normal;">和AI相处</em>——<br>
+            什么时候用，用多少，用完了还是自己在思考。
+          </div>
+        </div>
+        <div class="final-cols">
+          <div class="final-col">
+            <div class="final-col-title">📖 可带走</div>
+            <div class="final-item">
+              <span class="final-item-icon">🚂</span>
+              <div class="final-item-text">扫码体验 <strong><a href="https://timetrain.zhaozhiru.com/" target="_blank">时间小火车</a></strong>（可直接给孩子使用）</div>
+            </div>
+            <div class="final-item">
+              <span class="final-item-icon">📋</span>
+              <div class="final-item-text"><strong><a href="home-school-ai-cooperation-manual.html">家校AI协同参考手册</a></strong>（含4个原则+3个案例拆解+3个共识）</div>
+            </div>
+            <div class="final-item">
+              <span class="final-item-icon">💬</span>
+              <div class="final-item-text">欢迎任何关于AI与家庭教育的交流和提问</div>
+            </div>
+          </div>
+          <div class="final-col">
+            <div class="final-col-title">📱 扫码体验</div>
+            <div class="qr-placeholder" style="padding: 0;">
+              <img src="url.png" alt="时间小火车二维码" style="width: 30%; height: auto; border-radius: 1.6vh;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- #deck -->
+
+  <!-- NAV CONTROLS -->
+  <div id="nav">
+    <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>←</button>
+    <div id="slide-counter">1 / 10</div>
+    <button class="nav-btn" id="btn-next" onclick="navigate(1)">→</button>
+  </div>
+
+  <div id="dots"></div>
+
+  <div id="keyboard-hint">
+    <span class="key-icon">←</span>
+    <span class="key-icon">→</span>
+    &nbsp;翻页
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('slide-counter');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const dotsContainer = document.getElementById('dots');
+    let current = 0;
+    const total = slides.length;
+    let isAnimating = false;
+
+    // Build dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.onclick = () => goTo(i);
+      dotsContainer.appendChild(dot);
+    });
+
+    const isMobile = () => window.innerWidth <= 768;
+
+    function goTo(idx) {
+      if (idx < 0 || idx >= total || isAnimating) return;
+      isAnimating = true;
+      slides[current].classList.remove('active');
+      if (!isMobile()) {
+        slides[current].classList.add('exit');
+        setTimeout(() => slides[current].classList.remove('exit'), 200);
+      }
+      current = idx;
+      slides[current].classList.add('active');
+      if (isMobile()) window.scrollTo({ top: 0, behavior: 'instant' });
+      history.replaceState(null, '', `#slide-${current + 1}`);
+      updateUI();
+      setTimeout(() => { isAnimating = false; }, 600);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    function updateUI() {
+      counter.textContent = `${current + 1} / ${total}`;
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+      document.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    // URL hash navigation
+    function initFromHash() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#slide-')) {
+        const idx = parseInt(hash.replace('#slide-', '')) - 1;
+        if (!isNaN(idx) && idx >= 0 && idx < total) {
+          slides[current].classList.remove('active');
+          current = idx;
+          slides[current].classList.add('active');
+          updateUI();
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', initFromHash);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+        e.preventDefault(); navigate(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault(); navigate(-1);
+      }
+    });
+
+    // Mouse wheel navigation
+    let wheelTimeout;
+    document.addEventListener('wheel', e => {
+      e.preventDefault();
+      clearTimeout(wheelTimeout);
+      wheelTimeout = setTimeout(() => {
+        if (e.deltaY > 0) {
+          navigate(1);
+        } else if (e.deltaY < 0) {
+          navigate(-1);
+        }
+      }, 50);
+    }, { passive: false });
+
+    // Touch swipe
+    let touchX = 0;
+    document.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+    });
+
+    initFromHash();
+    updateUI();
+
+    const nav = document.getElementById('nav');
+    const keyboardHint = document.getElementById('keyboard-hint');
+    const dots = document.getElementById('dots');
+    let hideTimer;
+
+    function showNav() {
+      nav.classList.add('visible');
+      keyboardHint.style.opacity = '1';
+      dots.style.opacity = '1';
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        nav.classList.remove('visible');
+        keyboardHint.style.opacity = '0';
+        dots.style.opacity = '0';
+      }, 2000);
+    }
+
+    document.addEventListener('mousemove', showNav);
+    document.addEventListener('click', showNav);
+
+
+  </script>
+</body>
+
+</html>
