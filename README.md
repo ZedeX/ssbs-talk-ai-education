@@ -1,11 +1,11 @@
 # AI时代，做会借力的家长
 
-陪孩子用AI成长的三个真实故事——时间小火车、AI错题集、外国山海经。一位互联网产品人家长的实践分享。
+陪孩子用AI成长的三个真实故事——AI错题集、时间小火车、外国山海经。一位互联网产品人家长的实践分享。
 
 ## 项目链接
 
-- **主页面**: [index.html](index.html)
-- **家校AI协同参考手册**: [home-school-ai-cooperation-manual.html](home-school-ai-cooperation-manual.html)
+- **主页面**: [https://zedex.github.io/ssbs-talk-ai-education/](https://zedex.github.io/ssbs-talk-ai-education/)
+- **家校AI协同参考手册**: [https://zedex.github.io/ssbs-talk-ai-education/home-school-ai-cooperation-manual.html](https://zedex.github.io/ssbs-talk-ai-education/home-school-ai-cooperation-manual.html)
 - **时间小火车网站**: [https://timetrain.zhaozhiru.com/](https://timetrain.zhaozhiru.com/)
 - **GitHub 仓库**: [https://github.com/ZedeX/ssbs-talk-ai-education](https://github.com/ZedeX/ssbs-talk-ai-education)
 
