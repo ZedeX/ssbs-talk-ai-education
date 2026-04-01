@@ -40,3 +40,9 @@ ehthumbs.db
 # Cache
 .claude/
 .claude-plugin/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
